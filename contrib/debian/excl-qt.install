@@ -1,0 +1,6 @@
+usr/local/bin/excl-qt usr/bin
+share/pixmaps/excl32.xpm usr/share/pixmaps
+share/pixmaps/excl16.xpm usr/share/pixmaps
+share/pixmaps/excl128.png usr/share/pixmaps
+debian/excl-qt.desktop usr/share/applications
+debian/excl-qt.protocol usr/share/kde4/services/

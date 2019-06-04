@@ -1,0 +1,157 @@
+
+## <summary>policy for excl</summary>
+
+
+########################################
+## <summary>
+##	Transition to excl.
+## </summary>
+## <param name="domain">
+## <summary>
+##	Domain allowed to transition.
+## </summary>
+## </param>
+#
+interface(`excl_domtrans',`
+	gen_require(`
+		type excl_t, excl_exec_t;
+	')
+
+	corecmd_search_bin($1)
+	domtrans_pattern($1, excl_exec_t, excl_t)
+')
+
+
+########################################
+## <summary>
+##	Execute excl server in the excl domain.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`excl_initrc_domtrans',`
+	gen_require(`
+		type excl_initrc_exec_t;
+	')
+
+	init_labeled_script_domtrans($1, excl_initrc_exec_t)
+')
+
+
+########################################
+## <summary>
+##	Search excl lib directories.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`excl_search_lib',`
+	gen_require(`
+		type excl_var_lib_t;
+	')
+
+	allow $1 excl_var_lib_t:dir search_dir_perms;
+	files_search_var_lib($1)
+')
+
+########################################
+## <summary>
+##	Read excl lib files.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`excl_read_lib_files',`
+	gen_require(`
+		type excl_var_lib_t;
+	')
+
+	files_search_var_lib($1)
+	read_files_pattern($1, excl_var_lib_t, excl_var_lib_t)
+')
+
+########################################
+## <summary>
+##	Manage excl lib files.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`excl_manage_lib_files',`
+	gen_require(`
+		type excl_var_lib_t;
+	')
+
+	files_search_var_lib($1)
+	manage_files_pattern($1, excl_var_lib_t, excl_var_lib_t)
+')
+
+########################################
+## <summary>
+##	Manage excl lib directories.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`excl_manage_lib_dirs',`
+	gen_require(`
+		type excl_var_lib_t;
+	')
+
+	files_search_var_lib($1)
+	manage_dirs_pattern($1, excl_var_lib_t, excl_var_lib_t)
+')
+
+
+########################################
+## <summary>
+##	All of the rules required to administrate
+##	a excl environment
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+## <param name="role">
+##	<summary>
+##	Role allowed access.
+##	</summary>
+## </param>
+## <rolecap/>
+#
+interface(`excl_admin',`
+	gen_require(`
+		type excl_t;
+		type excl_initrc_exec_t;
+		type excl_var_lib_t;
+	')
+
+	allow $1 excl_t:process { ptrace signal_perms };
+	ps_process_pattern($1, excl_t)
+
+	excl_initrc_domtrans($1)
+	domain_system_change_exemption($1)
+	role_transition $2 excl_initrc_exec_t system_r;
+	allow $2 system_r;
+
+	files_search_var_lib($1)
+	admin_pattern($1, excl_var_lib_t)
+
+')
+

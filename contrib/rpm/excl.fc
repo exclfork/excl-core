@@ -1,0 +1,8 @@
+/usr/bin/excl-cli		--	gen_context(system_u:object_r:excl_exec_t,s0)
+/usr/sbin/excld		--	gen_context(system_u:object_r:excl_exec_t,s0)
+/usr/lib(64)?/excl/excld		--	gen_context(system_u:object_r:excl_exec_t,s0)
+
+/etc/excl(/.*)?		gen_context(system_u:object_r:excl_conf_t,s0)
+/var/lib/excl(/.*)?		gen_context(system_u:object_r:excl_var_lib_t,s0)
+
+(/var)?/run/excld(/.*)?   gen_context(system_u:object_r:excl_var_run_t,s0)

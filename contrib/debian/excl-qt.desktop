@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=EXCL Core
+Comment=EXCL P2P Cryptocurrency
+Comment[fr]=EXCL, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=EXCL, eşten eşe kriptografik sanal para birimi
+Exec=excl-qt %u
+Terminal=false
+Type=Application
+Icon=excl128
+MimeType=x-scheme-handler/excl;
+Categories=Office;Finance;
+StartupWMClass=Excl-qt
