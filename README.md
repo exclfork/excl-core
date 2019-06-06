@@ -12,6 +12,7 @@ Visit our ANN thread at [BitcoinTalk](https://bitcointalk.org/index.php?topic=15
 <tr><th>Block Time</th><td>60 Seconds</td></tr>
 <tr><th>Difficulty Retargeting</th><td>Every Block</td></tr>
 <tr><th>Min Stake Age</th><td>1 hour</td></tr>
+<tr><th>Maturity</th><td>100 blocks</td></tr>
 <tr><th>Port</th><td>23230</td></tr>
 <tr><th>RPCPort</th><td>51473</td></tr>
 </table>
