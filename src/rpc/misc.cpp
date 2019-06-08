@@ -312,9 +312,8 @@ UniValue makekeypair(const UniValue& params, bool fHelp)
  } while (nCount < 10000 && strPrefix != pubkeyhex.substr(0, strPrefix.size()));
 
  if (strPrefix != pubkeyhex.substr(0, strPrefix.size()))
- return Value::null;
+ return NullUniValue;
 
- Object result;
  UniValue result(UniValue::VOBJ);
  result.push_back(Pair("PublicKey", pubkeyhex));
  result.push_back(Pair("PrivateKey", CBitcoinSecret(key).ToString()));
