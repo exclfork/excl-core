@@ -1,5 +1,5 @@
 ---
-name: "excl-osx-3.2"
+name: "excl-osx-3.0.1"
 enable_cache: true
 distro: "ubuntu"
 suites:
