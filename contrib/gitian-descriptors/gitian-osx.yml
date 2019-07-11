@@ -29,7 +29,7 @@ packages:
 - "python3-setuptools"
 - "fonts-tuffy"
 remotes:
-- "url": "https://github.com/codevui/excl.git"
+- "url": "https://github.com/exclfork/excl-core.git"
   "dir": "excl"
 files:
 - "MacOSX10.11.sdk.tar.gz"

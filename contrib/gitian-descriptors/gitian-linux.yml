@@ -33,7 +33,7 @@ packages:
 - "ca-certificates"
 - "python3"
 remotes:
-- "url": "https://github.com/codevui/excl.git"
+- "url": "https://github.com/exclfork/excl-core§§.git"
   "dir": "excl"
 files: []
 script: |

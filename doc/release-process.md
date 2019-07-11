@@ -27,7 +27,7 @@ Check out the source code in the following directory hierarchy.
     git clone https://github.com/excl-project/gitian.sigs.git
     git clone https://github.com/excl-project/excl-detached-sigs.git
     git clone https://github.com/devrandom/gitian-builder.git
-    git clone https://github.com/codevui/excl.git
+    git clone https://github.com/exclfork/excl-core.git excl
 
 ### EXCL maintainers/release engineers, suggestion for writing release notes
 
