@@ -9,12 +9,12 @@ if [ -z "${1}" ]; then
   echo "Usage: $0 <base-dir> [<extra-bdb-configure-flag> ...]"
   echo
   echo "Must specify a single argument: the directory in which db4 will be built."
-  echo "This is probably \`pwd\` if you're at the root of the bitcoin repository."
+  echo "This is probably \`pwd\` if you're at the root of the excl repository."
   exit 1
 fi
 
 expand_path() {
-  cd "${1}" && pwd -P
+  echo "$(cd "${1}" && pwd -P)"
 }
 
 BDB_PREFIX="$(expand_path ${1})/db4"; shift;
@@ -23,7 +23,7 @@ BDB_HASH='12edc0df75bf9abd7f82f821795bcee50f42cb2e5f76a6a281b85732798364ef'
 BDB_URL="https://download.oracle.com/berkeley-db/${BDB_VERSION}.tar.gz"
 
 check_exists() {
-  command -v "$1" >/dev/null
+  which "$1" >/dev/null 2>&1
 }
 
 sha256_check() {
@@ -99,5 +99,4 @@ echo
 echo 'When compiling excld, run `./configure` in the following way:'
 echo
 echo "  export BDB_PREFIX='${BDB_PREFIX}'"
-# shellcheck disable=SC2016
 echo '  ./configure BDB_LIBS="-L${BDB_PREFIX}/lib -ldb_cxx-4.8" BDB_CFLAGS="-I${BDB_PREFIX}/include" ...'

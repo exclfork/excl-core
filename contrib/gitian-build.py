@@ -82,13 +82,9 @@ def build():
     if args.commit_files:
         print('\nCommitting '+args.version+' Unsigned Sigs\n')
         os.chdir('gitian.sigs')
-        subprocess.check_call(['git', 'config', 'user.signingkey', args.signer])
-        if args.linux:
-            subprocess.check_call(['git', 'add', args.version+'-linux/'+args.signer])
-        if args.windows:
-            subprocess.check_call(['git', 'add', args.version+'-win-unsigned/'+args.signer])
-        if args.macos:
-            subprocess.check_call(['git', 'add', args.version+'-osx-unsigned/'+args.signer])
+        subprocess.check_call(['git', 'add', args.version+'-linux/'+args.signer])
+        subprocess.check_call(['git', 'add', args.version+'-win-unsigned/'+args.signer])
+        subprocess.check_call(['git', 'add', args.version+'-osx-unsigned/'+args.signer])
         subprocess.check_call(['git', 'commit', '-m', 'Add '+args.version+' unsigned sigs for '+args.signer])
         os.chdir(workdir)
 
@@ -116,13 +112,9 @@ def sign():
     if args.commit_files:
         print('\nCommitting '+args.version+' Signed Sigs\n')
         os.chdir('gitian.sigs')
-
-        if args.windows:
-            subprocess.check_call(['git', 'add', args.version+'-win-signed/'+args.signer])
-        if args.macos:
-            subprocess.check_call(['git', 'add', args.version+'-osx-signed/'+args.signer])
-
-        subprocess.check_call(['git', 'commit', '-S', '-m', 'Add '+args.version+' signed binary sigs for '+args.signer])
+        subprocess.check_call(['git', 'add', args.version+'-win-signed/'+args.signer])
+        subprocess.check_call(['git', 'add', args.version+'-osx-signed/'+args.signer])
+        subprocess.check_call(['git', 'commit', '-a', '-m', 'Add '+args.version+' signed binary sigs for '+args.signer])
         os.chdir(workdir)
 
 def verify():
@@ -175,7 +167,7 @@ def main():
     parser.add_argument('-k', '--kvm', action='store_true', dest='kvm', help='Use KVM instead of LXC')
     parser.add_argument('-d', '--docker', action='store_true', dest='docker', help='Use Docker instead of LXC')
     parser.add_argument('-S', '--setup', action='store_true', dest='setup', help='Set up the Gitian building environment. Only works on Debian-based systems (Ubuntu, Debian)')
-    parser.add_argument('-D', '--detach-sign', action='store_true', dest='detach_sign', §help='Create the assert file for detached signing. Will not commit anything.')
+    parser.add_argument('-D', '--detach-sign', action='store_true', dest='detach_sign', help='Create the assert file for detached signing. Will not commit anything.')
     parser.add_argument('-n', '--no-commit', action='store_false', dest='commit_files', help='Do not commit anything to git')
     parser.add_argument('signer', nargs='?', help='GPG signer to sign each build assert file')
     parser.add_argument('version', nargs='?', help='Version number, commit, or branch to build. If building a commit or branch, the -c option must be specified')
