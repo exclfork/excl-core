@@ -174,9 +174,9 @@ public:
         assert(hashGenesisBlock == uint256("000018acd81f025bbff343a186c9007a3cb13313a9af840ec1068fac6a7d6b3f"));
         assert(genesis.hashMerkleRoot == uint256("203360d2e2b89ba9718a8dfd7eabcde6e409ac1b558f950629d268e864aca200"));
 
-        vSeeds.push_back(CDNSSeedData("started", "94.130.50.254"));     // Primary DNS Seeder from Fuzzbawls
-        vSeeds.push_back(CDNSSeedData("started", "seed1.exclusivecoin.pw"));     // Primary DNS Seeder from Fuzzbawls
-        vSeeds.push_back(CDNSSeedData("started", "seed2.exclusivecoin.pw"));     // Primary DNS Seeder from Fuzzbawls
+        vSeeds.push_back(CDNSSeedData("started", "94.130.50.254"));     //
+        vSeeds.push_back(CDNSSeedData("started", "seed1.exclusivecoin.pw"));     //
+        vSeeds.push_back(CDNSSeedData("started", "seed2.exclusivecoin.pw"));     //
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,33);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,137);
