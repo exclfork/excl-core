@@ -13,7 +13,6 @@
 #include "guiutil.h"
 #include "init.h"
 #include "obfuscation.h"
-#include "obfuscationconfig.h"
 #include "optionsmodel.h"
 #include "transactionfilterproxy.h"
 #include "transactionrecord.h"
@@ -152,21 +151,8 @@ void OverviewPage::getPercentage(CAmount nUnlockedBalance, CAmount nZerocoinBala
     int nPrecision = 2;
     double dzPercentage = 0.0;
 
-//    if (nZerocoinBalance <= 0){
-//        dzPercentage = 0.0;
-//    }
-//    else{
-//        if (nUnlockedBalance <= 0){
-//            dzPercentage = 100.0;
-//        }
-//        else{
-//            dzPercentage = 100.0 * (double)(nZerocoinBalance / (double)(nZerocoinBalance + nUnlockedBalance));
-//        }
-//    }
-
     double dPercentage = 100.0 - dzPercentage;
 
-//    szEXCLPercentage = "(" + QLocale(QLocale::system()).toString(dzPercentage, 'f', nPrecision) + " %)";
     sEXCLPercentage = "(" + QLocale(QLocale::system()).toString(dPercentage, 'f', nPrecision) + " %)";
 
 }
@@ -224,31 +210,12 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
     ui->labelWatchLocked->setText(BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, nWatchOnlyLockedBalance, false, BitcoinUnits::separatorAlways));
     ui->labelWatchTotal->setText(BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, nTotalWatchBalance, false, BitcoinUnits::separatorAlways));
 
-    // zEXCL labels
-//    ui->labelzBalance->setText(BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, zerocoinBalance, false, BitcoinUnits::separatorAlways));
-//    ui->labelzBalanceUnconfirmed->setText(BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, unconfirmedZerocoinBalance, false, BitcoinUnits::separatorAlways));
-//    ui->labelzBalanceMature->setText(BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, matureZerocoinBalance, false, BitcoinUnits::separatorAlways));
-//    ui->labelzBalanceImmature->setText(BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, immatureZerocoinBalance, false, BitcoinUnits::separatorAlways));
-
     // Combined labels
     ui->labelBalancez->setText(BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, availableTotalBalance, false, BitcoinUnits::separatorAlways));
     ui->labelTotalz->setText(BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, sumTotalBalance, false, BitcoinUnits::separatorAlways));
 
     // Percentage labels
     ui->labelEXCLPercent->setText(sPercentage);
-//    ui->labelzEXCLPercent->setText(szPercentage);
-
-    // Adjust bubble-help according to AutoMint settings
-//    QString automintHelp = tr("Current percentage of zEXCL.\nIf AutoMint is enabled this percentage will settle around the configured AutoMint percentage (default = 10%).\n");
-//    bool fEnableZeromint = GetBoolArg("-enablezeromint", false);
-//    int nZeromintPercentage = GetArg("-zeromintpercentage", 10);
-//    if (fEnableZeromint) {
-//        automintHelp += tr("AutoMint is currently enabled and set to ") + QString::number(nZeromintPercentage) + "%.\n";
-//        automintHelp += tr("To disable AutoMint add 'enablezeromint=0' in excl.conf.");
-//    }
-//    else {
-//        automintHelp += tr("AutoMint is currently disabled.\nTo enable AutoMint change 'enablezeromint=0' to 'enablezeromint=1' in excl.conf");
-//    }
 
     // Only show most balances if they are non-zero for the sake of simplicity
     QSettings settings;
@@ -288,21 +255,9 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
     ui->labelLockedBalance->setVisible(showEXCLLocked || showWatchOnlyEXCLLocked);
     ui->labelWatchLocked->setVisible(showWatchOnlyEXCLLocked && showWatchOnly);
 
-    // zEXCL
-//    bool showzEXCLAvailable = settingShowAllBalances || zerocoinBalance != matureZerocoinBalance;
-//    bool showzEXCLUnconfirmed = settingShowAllBalances || unconfirmedZerocoinBalance != 0;
-//    bool showzEXCLImmature = settingShowAllBalances || immatureZerocoinBalance != 0;
-//    ui->labelzBalanceMature->setVisible(showzEXCLAvailable);
-//    ui->labelzBalanceMatureText->setVisible(showzEXCLAvailable);
-//    ui->labelzBalanceUnconfirmed->setVisible(showzEXCLUnconfirmed);
-//    ui->labelzBalanceUnconfirmedText->setVisible(showzEXCLUnconfirmed);
-//    ui->labelzBalanceImmature->setVisible(showzEXCLImmature);
-//    ui->labelzBalanceImmatureText->setVisible(showzEXCLImmature);
-
     // Percent split
     bool showPercentages = ! (zerocoinBalance == 0 && nTotalBalance == 0);
     ui->labelEXCLPercent->setVisible(showPercentages);
-//    ui->labelzEXCLPercent->setVisible(showPercentages);
 
     static int cachedTxLocks = 0;
 

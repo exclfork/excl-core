@@ -50,12 +50,12 @@ public:
         return true;
     }
 
-    void StartLightZpivThread(boost::thread_group& threadGroup) {
+    void StartLightZexclThread(boost::thread_group& threadGroup) {
         LogPrintf("%s thread start\n", "excl-light-thread");
         threadIns = boost::thread(boost::bind(&CLightWorker::ThreadLightZEXCLSimplified, this));
     }
 
-    void StopLightZpivThread() {
+    void StopLightZexclThread() {
         threadIns.interrupt();
         LogPrintf("%s thread interrupted\n", "excl-light-thread");
     }
