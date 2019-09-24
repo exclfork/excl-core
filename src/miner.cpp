@@ -556,10 +556,14 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
             }
 
             if (chainActive.Tip()->nHeight < Params().LAST_POW_BLOCK()) {
-//                LogPrintf("Before LAST_POW_BLOCK %u %u", chainActive.Tip()->nHeight, Params().LAST_POW_BLOCK());
+                LogPrintf("Before LAST_POW_BLOCK %u %u", chainActive.Tip()->nHeight, Params().LAST_POW_BLOCK());
                 MilliSleep(5000);
                 continue;
             }
+            LogPrintf("vNodes.empty() = %s\n", vNodes.empty());
+            LogPrintf("pwallet->IsLocked() = %s\n", pwallet->IsLocked());
+            LogPrintf("(pwallet->GetBalance() > 0 && nReserveBalance >= pwallet->GetBalance()) = %s\n", (pwallet->GetBalance() > 0 && nReserveBalance >= pwallet->GetBalance()));
+            LogPrintf("masternodeSync.IsSynced() = %s\n", masternodeSync.IsSynced());
             while (vNodes.empty() || pwallet->IsLocked() || (pwallet->GetBalance() > 0 && nReserveBalance >= pwallet->GetBalance()) || !masternodeSync.IsSynced()) {
                 nLastCoinStakeSearchInterval = 0;
                 // Do a separate 1 minute check here to ensure fMintableCoins is updated
