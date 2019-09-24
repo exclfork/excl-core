@@ -560,11 +560,11 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
                 MilliSleep(5000);
                 continue;
             }
-            LogPrintf("vNodes.empty() = %s\n", vNodes.empty());
-            LogPrintf("pwallet->IsLocked() = %s\n", pwallet->IsLocked());
-            LogPrintf("(pwallet->GetBalance() > 0 && nReserveBalance >= pwallet->GetBalance()) = %s\n", (pwallet->GetBalance() > 0 && nReserveBalance >= pwallet->GetBalance()));
-            LogPrintf("masternodeSync.IsSynced() = %s\n", masternodeSync.IsSynced());
             while (vNodes.empty() || pwallet->IsLocked() || (pwallet->GetBalance() > 0 && nReserveBalance >= pwallet->GetBalance()) || !masternodeSync.IsSynced()) {
+                LogPrintf("vNodes.empty() = %s\n", vNodes.empty());
+                LogPrintf("pwallet->IsLocked() = %s\n", pwallet->IsLocked());
+                LogPrintf("(pwallet->GetBalance() > 0 && nReserveBalance >= pwallet->GetBalance()) = %s\n", (pwallet->GetBalance() > 0 && nReserveBalance >= pwallet->GetBalance()));
+                LogPrintf("!masternodeSync.IsSynced() = %s\n", !masternodeSync.IsSynced());
                 nLastCoinStakeSearchInterval = 0;
                 // Do a separate 1 minute check here to ensure fMintableCoins is updated
                 if (!fMintableCoins) {
@@ -578,9 +578,9 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
                 if (!fGenerateBitcoins && !fProofOfStake)
                     continue;
             }
-
             if (mapHashedBlocks.count(chainActive.Tip()->nHeight) && !fLastLoopOrphan) //search our map of hashed blocks, see if bestblock has been hashed yet
             {
+                LogPrintf("mapHashedBlocks.count(chainActive.Tip()->nHeight)=%s\n", mapHashedBlocks.count(chainActive.Tip()->nHeight));
                 if (GetTime() - mapHashedBlocks[chainActive.Tip()->nHeight] < max(pwallet->nHashInterval, (unsigned int)1)) // wait half of the nHashDrift with max wait of 3 minutes
                 {
                     MilliSleep(5000);
