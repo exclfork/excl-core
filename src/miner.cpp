@@ -119,7 +119,6 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
 
 //    const int nHeight = pindexPrev->nHeight + 1;
 
-    // Make sure to create the correct block version after zerocoin is enabled
     pblock->nVersion = 1;   // Supports CLTV activation
 
     // Create coinbase tx
@@ -333,7 +332,7 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
             double dPriorityDelta = 0;
             CAmount nFeeDelta = 0;
             mempool.ApplyDeltas(hash, dPriorityDelta, nFeeDelta);
-            if (!tx.HasZerocoinSpendInputs() && fSortedByFee && (dPriorityDelta <= 0) && (nFeeDelta <= 0) && (feeRate < ::minRelayTxFee) && (nBlockSize + nTxSize >= nBlockMinSize))
+            if (fSortedByFee && (dPriorityDelta <= 0) && (nFeeDelta <= 0) && (feeRate < ::minRelayTxFee) && (nBlockSize + nTxSize >= nBlockMinSize))
                 continue;
 
             // Prioritise by fee once past the priority size or we run out of high-priority
@@ -516,10 +515,6 @@ bool ProcessBlockFound(CBlock* pblock, CWallet& wallet, CReserveKey& reservekey)
     // Process this block the same as if we had received it from another node
     CValidationState state;
     if (!ProcessNewBlock(state, NULL, pblock)) {
-        if (pblock->IsZerocoinStake()) {
-            pwalletMain->zexclTracker->RemovePending(pblock->vtx[1].GetHash());
-            pwalletMain->zexclTracker->ListMints(true, true, true); //update the state
-        }
         return error("EXCLMiner : ProcessNewBlock, block not accepted");
     }
 
@@ -561,10 +556,6 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
                 continue;
             }
             while (vNodes.empty() || pwallet->IsLocked() || (pwallet->GetBalance() > 0 && nReserveBalance >= pwallet->GetBalance()) || !masternodeSync.IsSynced()) {
-                LogPrintf("vNodes.empty() = %s\n", vNodes.empty());
-                LogPrintf("pwallet->IsLocked() = %s\n", pwallet->IsLocked());
-                LogPrintf("(pwallet->GetBalance() > 0 && nReserveBalance >= pwallet->GetBalance()) = %s\n", (pwallet->GetBalance() > 0 && nReserveBalance >= pwallet->GetBalance()));
-                LogPrintf("!masternodeSync.IsSynced() = %s\n", !masternodeSync.IsSynced());
                 nLastCoinStakeSearchInterval = 0;
                 // Do a separate 1 minute check here to ensure fMintableCoins is updated
                 if (!fMintableCoins) {
