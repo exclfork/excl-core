@@ -1,5 +1,5 @@
 ---
-name: "excl-osx-3.0.1"
+name: "excl-osx-3.1"
 enable_cache: true
 distro: "ubuntu"
 suites:
@@ -29,7 +29,7 @@ packages:
 - "python3-setuptools"
 - "fonts-tuffy"
 remotes:
-- "url": "https://github.com/exclfork/excl-core.git"
+- "url": "https://github.com/codevui/excl.git"
   "dir": "excl"
 files:
 - "MacOSX10.11.sdk.tar.gz"
