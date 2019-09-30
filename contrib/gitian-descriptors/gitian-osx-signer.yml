@@ -1,5 +1,5 @@
 ---
-name: "excl-dmg-signer"
+name: "excl-core-dmg-signer"
 distro: "ubuntu"
 suites:
 - "bionic"
@@ -11,7 +11,7 @@ remotes:
 - "url": "https://github.com/codevui/excl-detached-sigs.git"
   "dir": "signature"
 files:
-- "excl-osx-unsigned.tar.gz"
+- "excl-core-osx-unsigned.tar.gz"
 script: |
   set -e -o pipefail
 
@@ -30,8 +30,8 @@ script: |
     chmod +x ${WRAP_DIR}/${prog}
   done
 
-  UNSIGNED=excl-osx-unsigned.tar.gz
-  SIGNED=excl-osx-signed.dmg
+  UNSIGNED=excl-core-osx-unsigned.tar.gz
+  SIGNED=excl-core-osx-signed.dmg
 
   tar -xf ${UNSIGNED}
   OSX_VOLNAME="$(cat osx_volname)"
