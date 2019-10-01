@@ -1,4 +1,4 @@
-// Copyright (c) 2018 The EXCL developers
+// Copyright (c) 2018-2019 The EXCL developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -8,12 +8,11 @@
 #include "sync.h"
 #include "main.h"
 #include "txdb.h"
-#include "walletdb.h"
+#include "wallet/walletdb.h"
 #include "zexcl/accumulators.h"
 #include "zexcl/zexclwallet.h"
 #include "witness.h"
 
-using namespace std;
 
 CzEXCLTracker::CzEXCLTracker(std::string strWalletFile)
 {
@@ -136,7 +135,7 @@ bool CzEXCLTracker::ClearSpendCache()
 
 std::vector<uint256> CzEXCLTracker::GetSerialHashes()
 {
-    vector<uint256> vHashes;
+    std::vector<uint256> vHashes;
     for (auto it : mapSerialHashes) {
         if (it.second.isArchived)
             continue;
@@ -154,11 +153,11 @@ CAmount CzEXCLTracker::GetBalance(bool fConfirmedOnly, bool fUnconfirmedOnly) co
     //! zerocoin specific fields
     std::map<libzerocoin::CoinDenomination, unsigned int> myZerocoinSupply;
     for (auto& denom : libzerocoin::zerocoinDenomList) {
-        myZerocoinSupply.insert(make_pair(denom, 0));
+        myZerocoinSupply.insert(std::make_pair(denom, 0));
     }
 
     {
-        //LOCK(cs_pivtracker);
+        //LOCK(cs_excltracker);
         // Get Unused coins
         for (auto& it : mapSerialHashes) {
             CMintMeta meta = it.second;
@@ -187,7 +186,7 @@ CAmount CzEXCLTracker::GetUnconfirmedBalance() const
 
 std::vector<CMintMeta> CzEXCLTracker::GetMints(bool fConfirmedOnly) const
 {
-    vector<CMintMeta> vMints;
+    std::vector<CMintMeta> vMints;
     for (auto& it : mapSerialHashes) {
         CMintMeta mint = it.second;
         if (mint.isArchived || mint.isUsed)
@@ -353,7 +352,7 @@ void CzEXCLTracker::SetPubcoinUsed(const uint256& hashPubcoin, const uint256& tx
         return;
     CMintMeta meta = GetMetaFromPubcoin(hashPubcoin);
     meta.isUsed = true;
-    mapPendingSpends.insert(make_pair(meta.hashSerial, txid));
+    mapPendingSpends.insert(std::make_pair(meta.hashSerial, txid));
     UpdateState(meta);
 }
 
@@ -460,7 +459,7 @@ bool CzEXCLTracker::UpdateStatusInternal(const std::set<uint256>& setMempool, CM
     return false;
 }
 
-std::set<CMintMeta> CzEXCLTracker::ListMints(bool fUnusedOnly, bool fMatureOnly, bool fUpdateStatus, bool fWrongSeed)
+std::set<CMintMeta> CzEXCLTracker::ListMints(bool fUnusedOnly, bool fMatureOnly, bool fUpdateStatus, bool fWrongSeed, bool fExcludeV1)
 {
     CWalletDB walletdb(strWalletFile);
     if (fUpdateStatus) {
@@ -473,6 +472,8 @@ std::set<CMintMeta> CzEXCLTracker::ListMints(bool fUnusedOnly, bool fMatureOnly,
 
         CzEXCLWallet* zEXCLWallet = new CzEXCLWallet(strWalletFile);
         for (auto& dMint : listDeterministicDB) {
+            if (fExcludeV1 && dMint.GetVersion() < 2)
+                continue;
             Add(dMint, false, false, zEXCLWallet);
         }
         delete zEXCLWallet;

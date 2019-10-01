@@ -1,14 +1,14 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2018 The EXCL developers
+// Copyright (c) 2015-2019 The EXCL developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "rpc/client.h"
 
 #include "rpc/protocol.h"
-#include "ui_interface.h"
+#include "guiinterface.h"
 #include "util.h"
 
 #include <set>
@@ -17,7 +17,6 @@
 #include <boost/algorithm/string/case_conv.hpp> // for to_lower()
 #include <univalue.h>
 
-using namespace std;
 
 class CRPCConvertParam
 {
@@ -108,10 +107,6 @@ static const CRPCConvertParam vRPCConvertParams[] =
         {"setban", 2},
         {"setban", 3},
         {"spork", 1},
-        {"mnbudget", 3},
-        {"mnbudget", 4},
-        {"mnbudget", 6},
-        {"mnbudget", 8},
         {"preparebudget", 2},
         {"preparebudget", 3},
         {"preparebudget", 5},
@@ -128,28 +123,6 @@ static const CRPCConvertParam vRPCConvertParams[] =
         {"setstakesplitthreshold", 0},
         {"autocombinerewards", 0},
         {"autocombinerewards", 1},
-//        {"getzerocoinbalance", 0},
-//        {"listmintedzerocoins", 0},
-//        {"listmintedzerocoins", 1},
-//        {"listspentzerocoins", 0},
-//        {"listzerocoinamounts", 0},
-//        {"mintzerocoin", 0},
-//        {"mintzerocoin", 1},
-//        {"spendzerocoin", 0},
-//        {"spendzerocoin", 1},
-//        {"spendzerocoin", 2},
-//        {"spendrawzerocoin", 2},
-//        {"spendzerocoinmints", 0},
-//        {"importzerocoins", 0},
-//        {"exportzerocoins", 0},
-//        {"exportzerocoins", 1},
-//        {"resetmintzerocoin", 0},
-//        {"getspentzerocoinamount", 1},
-//        {"generatemintlist", 0},
-//        {"generatemintlist", 1},
-//        {"searchdzexcl", 0},
-//        {"searchdzexcl", 1},
-//        {"searchdzexcl", 2},
         {"getaccumulatorvalues", 0},
         {"getaccumulatorwitness",2},
         {"getmintsvalues", 2},
@@ -200,7 +173,7 @@ UniValue ParseNonRFCJSONValue(const std::string& strVal)
     UniValue jVal;
     if (!jVal.read(std::string("[")+strVal+std::string("]")) ||
         !jVal.isArray() || jVal.size()!=1)
-        throw runtime_error(string("Error parsing JSON:")+strVal);
+        throw std::runtime_error(std::string("Error parsing JSON:")+strVal);
     return jVal[0];
 }
 

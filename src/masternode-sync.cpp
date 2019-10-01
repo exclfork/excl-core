@@ -92,7 +92,7 @@ void CMasternodeSync::AddedMasternodeList(uint256 hash)
         }
     } else {
         lastMasternodeList = GetTime();
-        mapSeenSyncMNB.insert(make_pair(hash, 1));
+        mapSeenSyncMNB.insert(std::make_pair(hash, 1));
     }
 }
 
@@ -105,7 +105,7 @@ void CMasternodeSync::AddedMasternodeWinner(uint256 hash)
         }
     } else {
         lastMasternodeWinner = GetTime();
-        mapSeenSyncMNW.insert(make_pair(hash, 1));
+        mapSeenSyncMNW.insert(std::make_pair(hash, 1));
     }
 }
 
@@ -119,7 +119,7 @@ void CMasternodeSync::AddedBudgetItem(uint256 hash)
         }
     } else {
         lastBudgetItem = GetTime();
-        mapSeenSyncBudget.insert(make_pair(hash, 1));
+        mapSeenSyncBudget.insert(std::make_pair(hash, 1));
     }
 }
 
@@ -222,7 +222,7 @@ void CMasternodeSync::ClearFulfilledRequest()
     TRY_LOCK(cs_vNodes, lockRecv);
     if (!lockRecv) return;
 
-    BOOST_FOREACH (CNode* pnode, vNodes) {
+    for (CNode* pnode : vNodes) {
         pnode->ClearFulfilledRequest("getspork");
         pnode->ClearFulfilledRequest("mnsync");
         pnode->ClearFulfilledRequest("mnwsync");
@@ -264,7 +264,7 @@ void CMasternodeSync::Process()
     TRY_LOCK(cs_vNodes, lockRecv);
     if (!lockRecv) return;
 
-    BOOST_FOREACH (CNode* pnode, vNodes) {
+    for (CNode* pnode : vNodes) {
         if (Params().NetworkID() == CBaseChainParams::REGTEST) {
             if (RequestedMasternodeAttempt <= 2) {
                 pnode->PushMessage("getsporks"); //get current network sporks
@@ -293,15 +293,17 @@ void CMasternodeSync::Process()
 
             return;
         }
-//        LogPrintf("Sync: pnode->nVersion %d masternodePayments.GetMinMasternodePaymentsProto() %d\n", pnode->nVersion, masternodePayments.GetMinMasternodePaymentsProto());
+
         if (pnode->nVersion >= masternodePayments.GetMinMasternodePaymentsProto()) {
             if (RequestedMasternodeAssets == MASTERNODE_SYNC_LIST) {
-//                LogPrintf("masternode CMasternodeSync::Process() - lastMasternodeList %lld (GetTime() - MASTERNODE_SYNC_TIMEOUT) %lld\n", lastMasternodeList, GetTime() - MASTERNODE_SYNC_TIMEOUT);
-//                LogPrintf("MASTERNODE_SYNC_LIST RequestedMasternodeAttempt=%d\n", RequestedMasternodeAttempt);
+                LogPrint("masternode", "CMasternodeSync::Process() - lastMasternodeList %lld (GetTime() - MASTERNODE_SYNC_TIMEOUT) %lld\n", lastMasternodeList, GetTime() - MASTERNODE_SYNC_TIMEOUT);
                 if (lastMasternodeList > 0 && lastMasternodeList < GetTime() - MASTERNODE_SYNC_TIMEOUT * 2 && RequestedMasternodeAttempt >= MASTERNODE_SYNC_THRESHOLD) { //hasn't received a new item in the last five seconds, so we'll move to the
                     GetNextAsset();
                     return;
                 }
+
+                if (pnode->HasFulfilledRequest("mnsync")) continue;
+                pnode->FulfilledRequest("mnsync");
 
                 // timeout
                 if (lastMasternodeList == 0 &&
@@ -318,10 +320,7 @@ void CMasternodeSync::Process()
                     return;
                 }
 
-                if (pnode->HasFulfilledRequest("mnsync")) continue;
-                pnode->FulfilledRequest("mnsync");
-
-                if (RequestedMasternodeAttempt >= MASTERNODE_SYNC_THRESHOLD) return;
+                if (RequestedMasternodeAttempt >= MASTERNODE_SYNC_THRESHOLD * 3) return;
 
                 mnodeman.DsegUpdate(pnode);
                 RequestedMasternodeAttempt++;
@@ -329,12 +328,13 @@ void CMasternodeSync::Process()
             }
 
             if (RequestedMasternodeAssets == MASTERNODE_SYNC_MNW) {
-//                LogPrintf("RequestedMasternodeAssets == MASTERNODE_SYNC_MNW %d %d %d\n", lastMasternodeWinner, RequestedMasternodeAttempt, MASTERNODE_SYNC_THRESHOLD  * 3);
                 if (lastMasternodeWinner > 0 && lastMasternodeWinner < GetTime() - MASTERNODE_SYNC_TIMEOUT * 2 && RequestedMasternodeAttempt >= MASTERNODE_SYNC_THRESHOLD) { //hasn't received a new item in the last five seconds, so we'll move to the
                     GetNextAsset();
                     return;
                 }
-//                LogPrintf("MASTERNODE_SYNC_MNW RequestedMasternodeAttempt=%d\n", RequestedMasternodeAttempt);
+
+                if (pnode->HasFulfilledRequest("mnwsync")) continue;
+                pnode->FulfilledRequest("mnwsync");
 
                 // timeout
                 if (lastMasternodeWinner == 0 &&
@@ -351,10 +351,7 @@ void CMasternodeSync::Process()
                     return;
                 }
 
-                if (pnode->HasFulfilledRequest("mnwsync")) continue;
-                pnode->FulfilledRequest("mnwsync");
-
-                if (RequestedMasternodeAttempt >= MASTERNODE_SYNC_THRESHOLD) return;
+                if (RequestedMasternodeAttempt >= MASTERNODE_SYNC_THRESHOLD * 3) return;
 
                 CBlockIndex* pindexPrev = chainActive.Tip();
                 if (pindexPrev == NULL) return;

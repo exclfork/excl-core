@@ -119,7 +119,7 @@ HEADERS += src/activemasternode.h \
            src/tinyformat.h \
            src/txdb.h \
            src/txmempool.h \
-           src/ui_interface.h \
+           src/guiinterface.h \
            src/uint256.h \
            src/undo.h \
            src/util.h \
@@ -175,7 +175,6 @@ HEADERS += src/activemasternode.h \
            src/qt/coincontroldialog.h \
            src/qt/coincontroltreewidget.h \
            src/qt/csvmodelwriter.h \
-           src/qt/obfuscationconfig.h \
            src/qt/editaddressdialog.h \
            src/qt/guiconstants.h \
            src/qt/guiutil.h \

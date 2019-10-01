@@ -22,8 +22,8 @@
 
 #ifdef ENABLE_WALLET
 #include "masternodeconfig.h"
-#include "wallet.h"
-#include "walletdb.h"
+#include "wallet/wallet.h"
+#include "wallet/walletdb.h"
 #endif
 
 #include <QNetworkProxy>
@@ -80,27 +80,6 @@ void OptionsModel::Init()
     if (!settings.contains("fCoinControlFeatures"))
         settings.setValue("fCoinControlFeatures", false);
     fCoinControlFeatures = settings.value("fCoinControlFeatures", false).toBool();
-
-//    if (!settings.contains("fZeromintEnable"))
-//        settings.setValue("fZeromintEnable", true);
-//    fEnableZeromint = settings.value("fZeromintEnable").toBool();
-//
-//    if (!settings.contains("fEnableAutoConvert"))
-//        settings.setValue("fEnableAutoConvert", true);
-//    fEnableAutoConvert = settings.value("fEnableAutoConvert").toBool();
-//
-//    if (!settings.contains("nZeromintPercentage"))
-//        settings.setValue("nZeromintPercentage", 10);
-//    nZeromintPercentage = settings.value("nZeromintPercentage").toLongLong();
-//
-//    if (!settings.contains("nPreferredDenom"))
-//        settings.setValue("nPreferredDenom", 0);
-//    nPreferredDenom = settings.value("nPreferredDenom", "0").toLongLong();
-//
-//    if (!settings.contains("nAnonymizeExclAmount"))
-//        settings.setValue("nAnonymizeExclAmount", 1000);
-//
-//    nAnonymizeExclAmount = settings.value("nAnonymizeExclAmount").toLongLong();
 
     if (!settings.contains("fShowMasternodesTab"))
         settings.setValue("fShowMasternodesTab", masternodeConfig.getCount());
@@ -167,17 +146,6 @@ void OptionsModel::Init()
         settings.setValue("language", "");
     if (!SoftSetArg("-lang", settings.value("language").toString().toStdString()))
         addOverriddenOption("-lang");
-
-//    if (settings.contains("fZeromintEnable"))
-//        SoftSetBoolArg("-enablezeromint", settings.value("fZeromintEnable").toBool());
-//    if (settings.contains("fEnableAutoConvert"))
-//        SoftSetBoolArg("-enableautoconvertaddress", settings.value("fEnableAutoConvert").toBool());
-//    if (settings.contains("nZeromintPercentage"))
-//        SoftSetArg("-zeromintpercentage", settings.value("nZeromintPercentage").toString().toStdString());
-//    if (settings.contains("nPreferredDenom"))
-//        SoftSetArg("-preferredDenom", settings.value("nPreferredDenom").toString().toStdString());
-//    if (settings.contains("nAnonymizeExclAmount"))
-//        SoftSetArg("-anonymizeexclamount", settings.value("nAnonymizeExclAmount").toString().toStdString());
 
     language = settings.value("language").toString();
 }
@@ -264,18 +232,8 @@ QVariant OptionsModel::data(const QModelIndex& index, int role) const
             return settings.value("fHideZeroBalances");
         case HideOrphans:
             return settings.value("fHideOrphans");
-//        case ZeromintEnable:
-//            return QVariant(fEnableZeromint);
-//        case ZeromintAddresses:
-//            return QVariant(fEnableAutoConvert);
-//        case ZeromintPercentage:
-//            return QVariant(nZeromintPercentage);
-//        case ZeromintPrefDenom:
-//            return QVariant(nPreferredDenom);
-//        case AnonymizeExclAmount:
-//            return QVariant(nAnonymizeExclAmount);
-//        case Listen:
-//            return settings.value("fListen");
+        case Listen:
+            return settings.value("fListen");
         default:
             return QVariant();
         }
@@ -381,39 +339,10 @@ bool OptionsModel::setData(const QModelIndex& index, const QVariant& value, int 
                 setRestartRequired(true);
             }
             break;
-//        case ZeromintEnable:
-//            fEnableZeromint = value.toBool();
-//            settings.setValue("fZeromintEnable", fEnableZeromint);
-//            emit zeromintEnableChanged(fEnableZeromint);
-//            break;
-//        case ZeromintAddresses:
-//            fEnableAutoConvert = value.toBool();
-//            settings.setValue("fEnableAutoConvert", fEnableAutoConvert);
-//            emit zeromintAddressesChanged(fEnableAutoConvert);
-//        case ZeromintPercentage:
-//            nZeromintPercentage = value.toInt();
-//            settings.setValue("nZeromintPercentage", nZeromintPercentage);
-//            emit zeromintPercentageChanged(nZeromintPercentage);
-//            break;
-//        case ZeromintPrefDenom:
-//            nPreferredDenom = value.toInt();
-//            settings.setValue("nPreferredDenom", nPreferredDenom);
-//            emit preferredDenomChanged(nPreferredDenom);
-//            break;
-//        case HideZeroBalances:
-//            fHideZeroBalances = value.toBool();
-//            settings.setValue("fHideZeroBalances", fHideZeroBalances);
-//            emit hideZeroBalancesChanged(fHideZeroBalances);
-//            break;
         case HideOrphans:
             fHideOrphans = value.toBool();
             settings.setValue("fHideOrphans", fHideOrphans);
             emit hideOrphansChanged(fHideOrphans);
-            break;
-        case AnonymizeExclAmount:
-            nAnonymizeExclAmount = value.toInt();
-            settings.setValue("nAnonymizeExclAmount", nAnonymizeExclAmount);
-            emit anonymizeExclAmountChanged(nAnonymizeExclAmount);
             break;
         case CoinControlFeatures:
             fCoinControlFeatures = value.toBool();
