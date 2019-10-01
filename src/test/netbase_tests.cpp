@@ -5,14 +5,14 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "netbase.h"
+#include "test/test_excl.h"
 
 #include <string>
 
 #include <boost/test/unit_test.hpp>
 
-using namespace std;
 
-BOOST_AUTO_TEST_SUITE(netbase_tests)
+BOOST_FIXTURE_TEST_SUITE(netbase_tests, BasicTestingSetup)
 
 BOOST_AUTO_TEST_CASE(netbase_networks)
 {
@@ -47,9 +47,9 @@ BOOST_AUTO_TEST_CASE(netbase_properties)
     BOOST_CHECK(CNetAddr("127.0.0.1").IsValid());
 }
 
-bool static TestSplitHost(string test, string host, int port)
+bool static TestSplitHost(std::string test, std::string host, int port)
 {
-    string hostOut;
+    std::string hostOut;
     int portOut = -1;
     SplitHostPort(test, portOut, hostOut);
     return hostOut == host && port == portOut;
@@ -62,19 +62,19 @@ BOOST_AUTO_TEST_CASE(netbase_splithost)
     BOOST_CHECK(TestSplitHost("www.bitcoin.org:80", "www.bitcoin.org", 80));
     BOOST_CHECK(TestSplitHost("[www.bitcoin.org]:80", "www.bitcoin.org", 80));
     BOOST_CHECK(TestSplitHost("127.0.0.1", "127.0.0.1", -1));
-    BOOST_CHECK(TestSplitHost("127.0.0.1:23230", "127.0.0.1", 23230));
+    BOOST_CHECK(TestSplitHost("127.0.0.1:51472", "127.0.0.1", 51472));
     BOOST_CHECK(TestSplitHost("[127.0.0.1]", "127.0.0.1", -1));
-    BOOST_CHECK(TestSplitHost("[127.0.0.1]:23230", "127.0.0.1", 23230));
+    BOOST_CHECK(TestSplitHost("[127.0.0.1]:51472", "127.0.0.1", 51472));
     BOOST_CHECK(TestSplitHost("::ffff:127.0.0.1", "::ffff:127.0.0.1", -1));
-    BOOST_CHECK(TestSplitHost("[::ffff:127.0.0.1]:23230", "::ffff:127.0.0.1", 23230));
-    BOOST_CHECK(TestSplitHost("[::]:23230", "::", 23230));
-    BOOST_CHECK(TestSplitHost("::23230", "::23230", -1));
-    BOOST_CHECK(TestSplitHost(":23230", "", 23230));
-    BOOST_CHECK(TestSplitHost("[]:23230", "", 23230));
+    BOOST_CHECK(TestSplitHost("[::ffff:127.0.0.1]:51472", "::ffff:127.0.0.1", 51472));
+    BOOST_CHECK(TestSplitHost("[::]:51472", "::", 51472));
+    BOOST_CHECK(TestSplitHost("::51472", "::51472", -1));
+    BOOST_CHECK(TestSplitHost(":51472", "", 51472));
+    BOOST_CHECK(TestSplitHost("[]:51472", "", 51472));
     BOOST_CHECK(TestSplitHost("", "", -1));
 }
 
-bool static TestParse(string src, string canon)
+bool static TestParse(std::string src, std::string canon)
 {
     CService addr;
     if (!LookupNumeric(src.c_str(), addr, 65535))
@@ -85,10 +85,10 @@ bool static TestParse(string src, string canon)
 BOOST_AUTO_TEST_CASE(netbase_lookupnumeric)
 {
     BOOST_CHECK(TestParse("127.0.0.1", "127.0.0.1:65535"));
-    BOOST_CHECK(TestParse("127.0.0.1:23230", "127.0.0.1:23230"));
+    BOOST_CHECK(TestParse("127.0.0.1:51472", "127.0.0.1:51472"));
     BOOST_CHECK(TestParse("::ffff:127.0.0.1", "127.0.0.1:65535"));
     BOOST_CHECK(TestParse("::", "[::]:65535"));
-    BOOST_CHECK(TestParse("[::]:23230", "[::]:23230"));
+    BOOST_CHECK(TestParse("[::]:51472", "[::]:51472"));
     BOOST_CHECK(TestParse("[127.0.0.1]", "127.0.0.1:65535"));
     BOOST_CHECK(TestParse(":::", ""));
 }

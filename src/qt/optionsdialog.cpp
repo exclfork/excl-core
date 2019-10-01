@@ -20,7 +20,7 @@
 #include "txdb.h" // for -dbcache defaults
 
 #ifdef ENABLE_WALLET
-#include "wallet.h" // for CWallet::minTxFee
+#include "wallet/wallet.h" // for CWallet::minTxFee
 #endif
 
 #include <boost/thread.hpp>
@@ -179,14 +179,6 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->bitcoinAtStartup, OptionsModel::StartAtStartup);
     mapper->addMapping(ui->threadsScriptVerif, OptionsModel::ThreadsScriptVerif);
     mapper->addMapping(ui->databaseCache, OptionsModel::DatabaseCache);
-//    // Zeromint Enabled
-//    mapper->addMapping(ui->checkBoxZeromintEnable, OptionsModel::ZeromintEnable);
-//    // Zeromint Addresses
-//    mapper->addMapping(ui->checkBoxZeromintAddresses, OptionsModel::ZeromintAddresses);
-//    // Zerocoin mint percentage
-//    mapper->addMapping(ui->zeromintPercentage, OptionsModel::ZeromintPercentage);
-//    // Zerocoin preferred denomination
-//    mapper->addMapping(ui->preferredDenom, OptionsModel::ZeromintPrefDenom);
 
     /* Wallet */
     mapper->addMapping(ui->spendZeroConfChange, OptionsModel::SpendZeroConfChange);
@@ -258,7 +250,6 @@ void OptionsDialog::on_resetButton_clicked()
 void OptionsDialog::on_okButton_clicked()
 {
     mapper->submit();
-    obfuScationPool.cachedNumBlocks = std::numeric_limits<int>::max();
     pwalletMain->MarkDirty();
     accept();
 }

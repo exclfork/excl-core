@@ -31,7 +31,7 @@
 
 #include "init.h"
 #include "masternodelist.h"
-#include "ui_interface.h"
+#include "guiinterface.h"
 #include "util.h"
 
 #include <iostream>
@@ -88,7 +88,6 @@ BitcoinGUI::BitcoinGUI(const NetworkStyle* networkStyle, QWidget* parent) : QMai
                                                                             aboutAction(0),
                                                                             receiveCoinsAction(0),
                                                                             governanceAction(0),
-//                                                                            privacyAction(0),
                                                                             optionsAction(0),
                                                                             toggleHideAction(0),
                                                                             encryptWalletAction(0),
@@ -272,10 +271,6 @@ BitcoinGUI::BitcoinGUI(const NetworkStyle* networkStyle, QWidget* parent) : QMai
     timerStakingIcon->start(10000);
     setStakingStatus();
 
-//    QTimer* timerAutoMintIcon = new QTimer(labelAutoMintIcon);
-//    connect(timerAutoMintIcon, SIGNAL(timeout()), this, SLOT(setAutoMintStatus()));
-//    timerAutoMintIcon->start(10000);
-//    setAutoMintStatus();
 }
 
 BitcoinGUI::~BitcoinGUI()
@@ -340,17 +335,6 @@ void BitcoinGUI::createActions(const NetworkStyle* networkStyle)
 #endif
     tabGroup->addAction(historyAction);
 
-//    privacyAction = new QAction(QIcon(":/icons/privacy"), tr("&Privacy"), this);
-//    privacyAction->setStatusTip(tr("Privacy Actions for zEXCL"));
-//    privacyAction->setToolTip(privacyAction->statusTip());
-//    privacyAction->setCheckable(true);
-//#ifdef Q_OS_MAC
-//    privacyAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_5));
-//#else
-//    privacyAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_5));
-//#endif
-//    tabGroup->addAction(privacyAction);
-
 #ifdef ENABLE_WALLET
 
     QSettings settings;
@@ -388,8 +372,6 @@ void BitcoinGUI::createActions(const NetworkStyle* networkStyle)
     connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(gotoSendCoinsPage()));
     connect(receiveCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(receiveCoinsAction, SIGNAL(triggered()), this, SLOT(gotoReceiveCoinsPage()));
-//    connect(privacyAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
-//    connect(privacyAction, SIGNAL(triggered()), this, SLOT(gotoPrivacyPage()));
     connect(historyAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(historyAction, SIGNAL(triggered()), this, SLOT(gotoHistoryPage()));
     connect(governanceAction, SIGNAL(triggered()), this, SLOT(gotoGovernancePage()));
@@ -571,9 +553,7 @@ void BitcoinGUI::createToolBars()
         toolbar->addAction(overviewAction);
         toolbar->addAction(sendCoinsAction);
         toolbar->addAction(receiveCoinsAction);
-//        toolbar->addAction(privacyAction);
         toolbar->addAction(historyAction);
-//        toolbar->addAction(privacyAction);
         QSettings settings;
         if (settings.value("fShowMasternodesTab").toBool()) {
             toolbar->addAction(masternodeAction);
@@ -630,7 +610,6 @@ void BitcoinGUI::setClientModel(ClientModel* clientModel)
         }
 #endif // ENABLE_WALLET
         unitDisplayControl->setOptionsModel(clientModel->getOptionsModel());
-//        connect(clientModel->getOptionsModel(), SIGNAL(zeromintEnableChanged(bool)), this, SLOT(setAutoMintStatus()));
 
         //Show trayIcon
         if (trayIcon)
@@ -677,7 +656,6 @@ void BitcoinGUI::setWalletActionsEnabled(bool enabled)
     overviewAction->setEnabled(enabled);
     sendCoinsAction->setEnabled(enabled);
     receiveCoinsAction->setEnabled(enabled);
-//    privacyAction->setEnabled(false);
     historyAction->setEnabled(enabled);
     QSettings settings;
     if (settings.value("fShowMasternodesTab").toBool()) {
@@ -734,7 +712,6 @@ void BitcoinGUI::createTrayIconMenu()
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(sendCoinsAction);
     trayIconMenu->addAction(receiveCoinsAction);
-//    trayIconMenu->addAction(privacyAction);
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(signMessageAction);
     trayIconMenu->addAction(verifyMessageAction);
@@ -836,12 +813,6 @@ void BitcoinGUI::gotoReceiveCoinsPage()
     receiveCoinsAction->setChecked(true);
     if (walletFrame) walletFrame->gotoReceiveCoinsPage();
 }
-
-//void BitcoinGUI::gotoPrivacyPage()
-//{
-//    privacyAction->setChecked(true);
-//    if (walletFrame) walletFrame->gotoPrivacyPage();
-//}
 
 void BitcoinGUI::gotoSendCoinsPage(QString addr)
 {
@@ -1203,23 +1174,6 @@ void BitcoinGUI::setStakingStatus()
         }
     }
 }
-
-//void BitcoinGUI::setAutoMintStatus()
-//{
-//    if (walletFrame) {
-//        if (fEnableZeromint) {
-//            labelAutoMintIcon->show();
-//            labelAutoMintIcon->setIcon(QIcon(":/icons/automint_active").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
-//            labelAutoMintIcon->setToolTip(
-//                    tr("AutoMint is currently enabled and set to ") + QString::number(nZeromintPercentage) + "%.\n");
-//        } else {
-//            labelAutoMintIcon->show();
-//            labelAutoMintIcon->POTENTIAL DEADLOCK DETECTEDsetIcon(
-//                    QIcon(":/icons/automint_inactive").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
-//            labelAutoMintIcon->setToolTip(tr("AutoMint is disabled"));
-//        }
-//    }
-//}
 
 bool BitcoinGUI::handlePaymentRequest(const SendCoinsRecipient& recipient)
 {

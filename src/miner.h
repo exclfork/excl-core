@@ -18,8 +18,6 @@ class CWallet;
 
 struct CBlockTemplate;
 
-/** Run the miner threads */
-void GenerateBitcoins(bool fGenerate, CWallet* pwallet, int nThreads);
 /** Generate a new block, without valid proof-of-work */
 CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, bool fProofOfStake);
 CBlockTemplate* CreateNewBlockWithKey(CReserveKey& reservekey, CWallet* pwallet, bool fProofOfStake);
@@ -28,7 +26,15 @@ void IncrementExtraNonce(CBlock* pblock, CBlockIndex* pindexPrev, unsigned int& 
 /** Check mined block */
 void UpdateTime(CBlockHeader* block, const CBlockIndex* pindexPrev);
 
-void BitcoinMiner(CWallet* pwallet, bool fProofOfStake);
+#ifdef ENABLE_WALLET
+    /** Run the miner threads */
+    void GenerateBitcoins(bool fGenerate, CWallet* pwallet, int nThreads);
+    /** Generate a new block, without valid proof-of-work */
+    CBlockTemplate* CreateNewBlockWithKey(CReserveKey& reservekey, CWallet* pwallet);
+
+    void BitcoinMiner(CWallet* pwallet, bool fProofOfStake);
+    void ThreadStakeMinter();
+#endif // ENABLE_WALLET
 
 extern double dHashesPerSec;
 extern int64_t nHPSTimerStart;

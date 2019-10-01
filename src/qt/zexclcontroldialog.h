@@ -8,7 +8,6 @@
 #include <QDialog>
 #include <QTreeWidgetItem>
 #include "zexcl/zerocoin.h"
-#include "privacydialog.h"
 
 class CZerocoinMint;
 class WalletModel;
@@ -44,7 +43,6 @@ public:
 private:
     Ui::ZExclControlDialog *ui;
     WalletModel* model;
-    PrivacyDialog* privacyDialog;
 
     void updateList();
     void updateLabels();

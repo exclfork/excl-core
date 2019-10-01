@@ -12,7 +12,7 @@
 #include "net.h"
 #include "obfuscation.h"
 #include "sync.h"
-#include "wallet.h"
+#include "wallet/wallet.h"
 
 #define ACTIVE_MASTERNODE_INITIAL 0 // initial state
 #define ACTIVE_MASTERNODE_SYNC_IN_PROCESS 1
@@ -63,7 +63,7 @@ public:
 
     /// Get 5000 EXCL input that can be used for the Masternode
     bool GetMasterNodeVin(CTxIn& vin, CPubKey& pubkey, CKey& secretKey);
-    vector<COutput> SelectCoinsMasternode();
+    std::vector<COutput> SelectCoinsMasternode();
 
     /// Enable cold wallet mode (run a Masternode with no funds)
     bool EnableHotColdMasterNode(CTxIn& vin, CService& addr);

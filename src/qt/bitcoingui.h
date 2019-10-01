@@ -110,7 +110,6 @@ private:
     QAction* aboutAction;
     QAction* receiveCoinsAction;
     QAction* governanceAction;
-//    QAction* privacyAction;
     QAction* optionsAction;
     QAction* toggleHideAction;
     QAction* encryptWalletAction;
@@ -186,7 +185,6 @@ public slots:
 
 #ifdef ENABLE_WALLET
     void setStakingStatus();
-//    void setAutoMintStatus();
 
     /** Set the encryption status as shown in the UI.
        @param[in] status            current encryption status
@@ -216,10 +214,8 @@ private slots:
     void gotoBlockExplorerPage();
     /** Switch to masternode page */
     void gotoMasternodePage();
-    /** Switch to privacy page */
-    void gotoReceiveCoinsPage();
     /** Switch to receive coins page */
-//    void gotoPrivacyPage();
+    void gotoReceiveCoinsPage();
     /** Switch to send coins page */
     void gotoSendCoinsPage(QString addr = "");
 
