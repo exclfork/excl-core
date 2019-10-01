@@ -13,7 +13,7 @@
  * for both excld and excl-qt, to make it harder for attackers to
  * target servers or GUI users specifically.
  */
-const std::string CLIENT_NAME("EXCL Core");
+const std::string CLIENT_NAME("EXCL Core - Boutique");
 
 /**
  * Client version number
