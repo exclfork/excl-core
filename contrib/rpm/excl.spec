@@ -21,7 +21,7 @@ Summary:	Peer to Peer Cryptographic Currency
 Group:		Applications/System
 License:	MIT
 URL:		https://excl.org/
-Source0:	https://excl.org/bin/excl-core-%{version}/excl-%{version}.tar.gz
+Source0:	https://excl.org/bin/excl-%{version}/excl-%{version}.tar.gz
 Source1:	http://download.oracle.com/berkeley-db/db-%{bdbv}.NC.tar.gz
 
 Source10:	https://raw.githubusercontent.com/excl-project/excl/v%{version}/contrib/debian/examples/excl.conf
@@ -124,11 +124,11 @@ BuildRequires:	checkpolicy
 BuildRequires:	%{_datadir}/selinux/devel/Makefile
 
 %description server
-This package provides a stand-alone excl-core daemon. For most users, this
+This package provides a stand-alone excl daemon. For most users, this
 package is only needed if they need a full-node without the graphical client.
 
 Some third party wallet software will want this package to provide the actual
-excl-core node they use to connect to the network.
+excl node they use to connect to the network.
 
 If you use the graphical excl-core client then you almost certainly do not
 need this package.
